@@ -43,14 +43,15 @@ class Merger
             vector<vector<int>> out_vector;
             out_vector.reserve(intervals.size());
             out_vector.emplace_back(intervals[0]);
-            for (size_t idx = 1; idx < intervals.size(); ++idx) {
-                if (out_vector[idx - 1][1] >= intervals[idx][0]) {
-                    if (out_vector[idx - 1][1] < intervals[idx][1]) {
-                        out_vector[idx - 1][1] = intervals[idx][1];
+            for (size_t src_idx = 1, tgt_idx = 1; src_idx < intervals.size(); ++src_idx) {
+                if (out_vector[tgt_idx - 1][1] >= intervals[src_idx][0]) {
+                    if (out_vector[tgt_idx - 1][1] < intervals[src_idx][1]) {
+                        out_vector[tgt_idx - 1][1] = intervals[src_idx][1];
                     }
                 }
                 else {
-                    out_vector.emplace_back(intervals[idx]);
+                    out_vector.emplace_back(intervals[src_idx]);
+                    ++tgt_idx;
                 }
             }
 
@@ -79,12 +80,17 @@ class Merger
 int main(int argc, char **argv)
 {
     vector<vector<int>> intervals;
-    intervals.emplace_back(vector<int>({1, 4}));
-    intervals.emplace_back(vector<int>({4, 5}));
+    // intervals.emplace_back(vector<int>({1, 4}));
+    // intervals.emplace_back(vector<int>({4, 5}));
+
+    intervals.emplace_back(vector<int>({1, 3}));
+    intervals.emplace_back(vector<int>({2, 6}));
+    intervals.emplace_back(vector<int>({8, 10}));
+    intervals.emplace_back(vector<int>({15, 18}));
 
     Merger merger;
     merger.print_intervals(intervals);
-    merger.merge(intervals);
-    merger.print_intervals(intervals);
+    auto merged_intervals = merger.merge(intervals);
+    merger.print_intervals(merged_intervals);
 
 }
